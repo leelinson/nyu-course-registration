@@ -1,0 +1,33 @@
+name: Probe class search
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [milestone-3-sections]
+    paths: [.github/workflows/probe-class-search.yml]
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch class search page and API
+        run: |
+          set -x
+          curl -sS -o page.html -w '%{http_code}\n' https://bulletins.nyu.edu/class-search/
+          grep -oE '(src|href)="[^"]*\.js[^"]*"' page.html | head -20
+          grep -oE 'srcdb[^,]{0,80}' page.html | head -20
+          grep -oE '<option value="[0-9]{4}"[^<]*' page.html | head -20
+          curl -sS -X POST 'https://bulletins.nyu.edu/class-search/api/?page=fose&route=search' \
+            -H 'Content-Type: application/json' \
+            --data '{"other":{"srcdb":"1274"},"criteria":[{"field":"subject","value":"ECON-UA"}]}' \
+            -o search.json -w '%{http_code}\n'
+          head -c 3000 search.json; echo
+          python3 -c "import json;d=json.load(open('search.json'));print(d.keys() if isinstance(d,dict) else type(d));r=d.get('results',[]);print(len(r));print(json.dumps(r[:3],indent=1))" || true
+          key=$(python3 -c "import json;r=json.load(open('search.json'))['results'];print(r[0]['key'])" || true)
+          code=$(python3 -c "import json;r=json.load(open('search.json'))['results'];print(r[0]['code'])" || true)
+          crn=$(python3 -c "import json;r=json.load(open('search.json'))['results'];print(r[0].get('crn',''))" || true)
+          curl -sS -X POST 'https://bulletins.nyu.edu/class-search/api/?page=fose&route=details' \
+            -H 'Content-Type: application/json' \
+            --data "{\"group\":\"code:$code\",\"key\":\"crn:$crn\",\"srcdb\":\"1274\",\"matched\":\"crn:$crn\"}" \
+            -o details.json -w '%{http_code}\n'
+          head -c 4000 details.json; echo
