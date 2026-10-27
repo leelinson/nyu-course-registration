@@ -1,0 +1,43 @@
+name: Database
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: planner
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: planner
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check generated requirements SQL is up to date
+        run: |
+          python3 scripts/build_requirements_sql.py > /tmp/seed_requirements.sql
+          diff -u supabase/seed_requirements.sql /tmp/seed_requirements.sql
+
+      - name: Apply migrations and seeds
+        run: |
+          for f in supabase/migrations/*.sql supabase/seed.sql supabase/seed_requirements.sql; do
+            echo "== $f"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+
+      - name: Every pilot program has requirements
+        run: |
+          missing=$(psql -tAc "select count(*) from programs p where not exists (select 1 from requirement_groups g where g.program_id = p.id)")
+          test "$missing" = "0"

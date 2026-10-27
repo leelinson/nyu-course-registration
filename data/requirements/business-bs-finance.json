@@ -1,0 +1,85 @@
+{
+  "program": { "slug": "business-bs", "concentration": "Finance", "catalog_year": "2026-2027" },
+  "source": "https://bulletins.nyu.edu/undergraduate/business/programs/business-bs/",
+  "courses": {
+    "MULT-UB 303": { "title": "NYC Consulting Capstone", "credits": 3 },
+    "SOIM-UB 125": { "title": "Business and Society", "credits": 4 },
+    "SOIM-UB 65":  { "title": "Organizational Communication and Its Social Context", "credits": 4 },
+    "SOIM-UB 6":   { "title": "Law, Business and Society", "credits": 4 },
+    "SOIM-UB 12":  { "title": "Professional Responsibility and Leadership", "credits": 2 },
+    "MULT-UB 9":   { "title": "Cohort Leadership Program I", "credits": 0 },
+    "ECON-UB 2":   { "title": "Microeconomics with Calculus", "credits": 4 },
+    "STAT-UB 103": { "title": "Statistics for Business Control, Regression and Forecasting Models", "credits": 4 },
+    "STAT-UB 3":   {},
+    "ACCT-UB 1":   { "title": "Principles of Financial Accounting", "credits": 4 },
+    "ACCT-UB 4":   { "title": "Managerial Accounting", "credits": 4 },
+    "FINC-UB 2":   { "title": "Foundations of Finance", "credits": 4 },
+    "TECH-UB 1":   { "title": "Information Technology in Business and Society", "credits": 4 },
+    "MGMT-UB 1":   { "title": "Management and Organizations", "credits": 4 },
+    "MKTG-UB 1":   { "title": "Introduction to Marketing", "credits": 4 },
+    "OPMG-UB 1":   { "title": "Operations Management", "credits": 4 },
+    "MGMT-UB 2":   { "title": "Strategic Management", "credits": 4 },
+    "ECON-UB 11":  { "title": "Economics of Global Business", "credits": 4 },
+    "FINC-UB 7":   { "title": "Corporate Finance" },
+    "ACCT-UB 23":  { "title": "Financial Modeling and Analysis", "credits": 3 },
+    "ECON-UB 230": { "title": "Global Macroeconomics", "credits": 3 },
+    "ECON-UB 233": { "title": "Macroeconomic Foundations for Asset Prices", "credits": 3 },
+    "MATH-GA 2048": { "title": "Scientific Computing in Finance", "credits": 3 },
+    "MATH-GA 2708": { "title": "Algorithmic Trading and Quantitative Strategies", "credits": 3 },
+    "MATH-GA 2751": { "title": "Risk and Portfolio Management", "credits": 3 },
+    "MATH-GA 2791": { "title": "Financial Securities and Markets", "credits": 3 },
+    "MATH-GA 2792": { "title": "Continuous Time Finance", "credits": 3 },
+    "MULT-UB 27":  { "title": "The Financial System", "credits": 3 },
+    "OPMG-UB 30":  { "title": "Foundations of AI Agents", "credits": 1.5 },
+    "MATH-UA 121": { "title": "Calculus I", "credits": 4 },
+    "MULT-UB 100": { "title": "Commerce and Culture", "credits": 4 }
+  },
+  "groups": [
+    {
+      "label": "Stern major requirements", "rule": "all",
+      "courses": ["MULT-UB 303", "SOIM-UB 125", "SOIM-UB 65", "SOIM-UB 6", "SOIM-UB 12"]
+    },
+    {
+      "label": "Business core", "rule": "all",
+      "children": [
+        { "label": "Required business core", "rule": "all",
+          "courses": ["MULT-UB 9", "ECON-UB 2", "ACCT-UB 1"] },
+        { "label": "Statistics", "rule": "choose_n", "n": 1,
+          "note": "STAT-UB 3 also requires passing the Statistics Proficiency Exam.",
+          "courses": ["STAT-UB 103", "STAT-UB 3"] },
+        { "label": "Functional business core", "rule": "choose_n", "n": 5,
+          "note": "At least 5 of these 7 (20 credits). Finance concentrators must include FINC-UB 2.",
+          "courses": ["ACCT-UB 4", "FINC-UB 2", "TECH-UB 1", "MGMT-UB 1", "MKTG-UB 1", "OPMG-UB 1", "MGMT-UB 2"] },
+        { "label": "Global business core", "rule": "all", "courses": ["ECON-UB 11"] }
+      ]
+    },
+    {
+      "label": "Finance concentration", "rule": "all",
+      "note": "12 credits of upper-level finance beyond the business core.",
+      "children": [
+        { "label": "Required finance", "rule": "all", "courses": ["FINC-UB 2", "FINC-UB 7"] },
+        { "label": "Advanced finance electives", "rule": "choose_n", "n": 3,
+          "note": "Any FINC-UB elective, any FINC-GB 6000-level elective, or one of the listed courses.",
+          "courses": [{ "pattern": "FINC-UB %" }, { "pattern": "FINC-GB 6___" },
+                      "ACCT-UB 23", "ECON-UB 230", "ECON-UB 233", "MATH-GA 2048", "MATH-GA 2708",
+                      "MATH-GA 2751", "MATH-GA 2791", "MATH-GA 2792", "MULT-UB 27", "OPMG-UB 30"] }
+      ]
+    },
+    {
+      "label": "Liberal arts core", "rule": "all",
+      "children": [
+        { "label": "Calculus", "rule": "all", "note": "Or a higher-level calculus course.", "courses": ["MATH-UA 121"] },
+        { "label": "Commerce and Culture", "rule": "all", "courses": ["MULT-UB 100"] },
+        { "label": "Texts and Ideas", "rule": "choose_n", "n": 1,
+          "note": "Any CAS Core Texts and Ideas course.", "courses": [{ "pattern": "CORE-UA %" }] },
+        { "label": "Cultures and Contexts", "rule": "choose_n", "n": 1,
+          "note": "CAS Cultures and Contexts or Liberal Studies Global Cultures.", "courses": [{ "pattern": "%" }] },
+        { "label": "Natural science", "rule": "choose_n", "n": 1,
+          "note": "CORE-UA 200 to 399, or an approved departmental course.",
+          "courses": [{ "pattern": "CORE-UA 2__" }, { "pattern": "CORE-UA 3__" }] }
+      ]
+    },
+    { "label": "Other electives", "rule": "credits_min", "credits": 43,
+      "courses": [{ "pattern": "%" }] }
+  ]
+}
