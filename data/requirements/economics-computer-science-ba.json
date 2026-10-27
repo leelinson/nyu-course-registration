@@ -1,0 +1,60 @@
+{
+  "program": { "slug": "economics-computer-science-ba", "concentration": null, "catalog_year": "2026-2027" },
+  "source": "https://bulletins.nyu.edu/undergraduate/arts-science/programs/economics-computer-science-ba/",
+  "major_credits": 88,
+  "courses": {
+    "ECON-UA 1":   { "title": "Introduction to Macroeconomics", "credits": 4 },
+    "ECON-UA 2":   { "title": "Introduction to Microeconomics", "credits": 4 },
+    "ECON-UA 11":  { "title": "Microeconomic Analysis", "credits": 4 },
+    "ECON-UA 13":  { "title": "Macroeconomic Analysis", "credits": 4 },
+    "ECON-UA 20":  { "title": "Analytical Statistics", "credits": 4 },
+    "ECON-UA 266": { "title": "Intro to Econometrics", "credits": 4 },
+    "ECON-UA 310": { "title": "Game Theory", "credits": 4 },
+    "ECON-UA 365": { "title": "Advanced Micro Theory", "credits": 4 },
+    "CSCI-UA 101": { "title": "Intro to Computer Science", "credits": 4 },
+    "CSCI-UA 102": { "title": "Data Structures", "credits": 4 },
+    "CSCI-UA 201": { "title": "Computer Systems Organization", "credits": 4 },
+    "CSCI-UA 202": { "title": "Operating Systems", "credits": 4 },
+    "CSCI-UA 310": { "title": "Basic Algorithms", "credits": 4 },
+    "MATH-UA 120": { "title": "Discrete Mathematics", "credits": 4 },
+    "MATH-UA 131": { "title": "Mathematics for Economics I", "credits": 4 },
+    "MATH-UA 132": { "title": "Mathematics for Economics II", "credits": 4 },
+    "MATH-UA 133": { "title": "Mathematics for Economics III", "credits": 4 },
+    "MATH-UA 140": { "title": "Linear Algebra", "credits": 4 },
+    "MATH-UA 334": { "title": "Mathematical Statistics", "credits": 4 }
+  },
+  "groups": [
+    {
+      "label": "Economics", "rule": "all",
+      "note": "Economics Theory track only. C or better in every course; no Pass/Fail.",
+      "children": [
+        { "label": "Introductory economics", "rule": "choose_n", "n": 1,
+          "note": "AP or equivalent credit in either subject can satisfy this.",
+          "courses": ["ECON-UA 1", "ECON-UA 2"] },
+        { "label": "Economics core", "rule": "all",
+          "courses": ["ECON-UA 11", "ECON-UA 13", "ECON-UA 266"] },
+        { "label": "Statistics", "rule": "choose_n", "n": 1,
+          "note": "Taking MATH-UA 334 adds one more ECON-UA elective.",
+          "courses": ["ECON-UA 20", "MATH-UA 334"] },
+        { "label": "300-level theory electives", "rule": "choose_n", "n": 2,
+          "courses": [{ "pattern": "ECON-UA 3__" }] },
+        { "label": "Additional economics elective", "rule": "choose_n", "n": 1,
+          "courses": [{ "pattern": "ECON-UA %" }] }
+      ]
+    },
+    {
+      "label": "Computer Science", "rule": "all",
+      "children": [
+        { "label": "Computer science core", "rule": "all",
+          "courses": ["CSCI-UA 101", "CSCI-UA 102", "CSCI-UA 201", "CSCI-UA 202", "CSCI-UA 310"] },
+        { "label": "400-level computer science electives", "rule": "choose_n", "n": 4,
+          "note": "One may be replaced by MATH-UA 140, ECON-UA 310, or ECON-UA 365. CAS students may not take CS courses at Tandon.",
+          "courses": [{ "pattern": "CSCI-UA 4__" }, "MATH-UA 140", "ECON-UA 310", "ECON-UA 365"] }
+      ]
+    },
+    {
+      "label": "Mathematics", "rule": "all",
+      "courses": ["MATH-UA 120", "MATH-UA 131", "MATH-UA 132", "MATH-UA 133"]
+    }
+  ]
+}

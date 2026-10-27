@@ -1,0 +1,67 @@
+{
+  "program": { "slug": "film-television-bfa", "concentration": null, "catalog_year": "2026-2027" },
+  "source": "https://bulletins.nyu.edu/undergraduate/arts/programs/film-television-bfa/",
+  "courses": {
+    "FMTV-UT 101":  { "title": "Production Safety and Set Protocol", "credits": 1 },
+    "FMTV-UT 20":   { "title": "Storytelling Strategies", "credits": 4 },
+    "FMTV-UT 1040": { "title": "Intermediate Narrative Production Workshop" },
+    "FMTV-UT 1046": { "title": "Intermediate Experimental Workshop" },
+    "FMTV-UT 1041": { "title": "Intermediate Documentary Production Workshop: Docs Inside and Out" },
+    "FMTV-UT 1061": { "title": "Intermediate Documentary Production Workshop: Sports Documentary" },
+    "FMTV-UT 1076": { "title": "Intermediate TV Bootcamp" },
+    "FMTV-UT 1222": { "title": "Children's TV Production Workshop" },
+    "FMTV-UT 1053": { "title": "Advanced Production Workshop I" },
+    "FMTV-UT 1054": { "title": "Advanced Production Workshop II" },
+    "FMTV-UT 1245": { "title": "Narrative Workshop" },
+    "FMTV-UT 1147": { "title": "Advanced Experimental Workshop" },
+    "FMTV-UT 1080": { "title": "Advanced Documentary Production Workshop" },
+    "FMTV-UT 1777": { "title": "Advanced TV Production Workshop" },
+    "EXPOS-UA 5":   { "title": "Writing as Inquiry: Art and Meaning", "credits": 4 },
+    "ASPP-UT 2":    { "title": "Advanced Writing and Research in the Arts", "credits": 4 }
+  },
+  "groups": [
+    {
+      "label": "Major requirements", "rule": "all",
+      "children": [
+        { "label": "Production safety", "rule": "all", "courses": ["FMTV-UT 101"] },
+        { "label": "History and Criticism", "rule": "choose_n", "n": 3,
+          "note": "9 to 12 credits. The bulletin names no course list; the department designates which FMTV-UT courses count.",
+          "courses": [{ "pattern": "FMTV-UT %" }] },
+        { "label": "Core Production", "rule": "choose_n", "n": 4,
+          "note": "20 credits. Courses listed are the intermediate and advanced workshops named in the bulletin's program policies; the first-year Sight & Sound courses may also count.",
+          "courses": ["FMTV-UT 1040", "FMTV-UT 1046", "FMTV-UT 1041", "FMTV-UT 1061", "FMTV-UT 1076", "FMTV-UT 1222",
+                      "FMTV-UT 1053", "FMTV-UT 1054", "FMTV-UT 1245", "FMTV-UT 1147", "FMTV-UT 1080", "FMTV-UT 1777"] },
+        { "label": "Craft", "rule": "choose_n", "n": 1,
+          "note": "2 credits. The department designates which FMTV-UT courses count.",
+          "courses": [{ "pattern": "FMTV-UT %" }] },
+        { "label": "Screenwriting and Television Writing", "rule": "all",
+          "children": [
+            { "label": "Storytelling Strategies", "rule": "all", "courses": ["FMTV-UT 20"] },
+            { "label": "Additional screenwriting courses", "rule": "choose_n", "n": 2,
+              "note": "8 credits. The department designates which FMTV-UT courses count.",
+              "courses": [{ "pattern": "FMTV-UT %" }] }
+          ] },
+        { "label": "Major electives", "rule": "credits_min", "credits": 7,
+          "note": "From History and Criticism, Craft, Screenwriting, or Core Production.",
+          "courses": [{ "pattern": "FMTV-UT %" }] }
+      ]
+    },
+    {
+      "label": "General education", "rule": "all",
+      "children": [
+        { "label": "Expository writing", "rule": "all", "courses": ["EXPOS-UA 5", "ASPP-UT 2"] },
+        { "label": "Humanities", "rule": "choose_n", "n": 2,
+          "note": "Any Tisch-approved Humanities course.",
+          "courses": [{ "pattern": "%" }] },
+        { "label": "Science and Social Science", "rule": "choose_n", "n": 2,
+          "note": "Any Tisch-approved Science or Social Science course.",
+          "courses": [{ "pattern": "%" }] },
+        { "label": "General education electives", "rule": "choose_n", "n": 5,
+          "note": "At least five more Humanities or Science and Social Science courses (20 credits).",
+          "courses": [{ "pattern": "%" }] }
+      ]
+    },
+    { "label": "Other electives", "rule": "credits_min", "credits": 30,
+      "courses": [{ "pattern": "%" }] }
+  ]
+}
