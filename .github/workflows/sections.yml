@@ -1,0 +1,76 @@
+name: Sections
+
+on:
+  schedule:
+    - cron: "0 10 * * *"   # daily, 6am New York time in winter
+  workflow_dispatch:
+    inputs:
+      term:
+        description: NYU term code (1274 = Spring 2027)
+        default: "1274"
+  pull_request:
+    paths: [scrapers/**, .github/workflows/sections.yml]
+
+env:
+  TERM_CODE: ${{ inputs.term || '1274' }}
+
+jobs:
+  # On pull requests: scrape a few live subjects into a throwaway database.
+  smoke:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: planner
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost/planner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scrapers/requirements.txt
+      - name: Apply schema
+        run: |
+          for f in supabase/migrations/*.sql supabase/seed.sql supabase/seed_requirements.sql; do
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+      - name: Scrape three subjects from Class Search
+        run: python3 scrapers/sections.py --term "$TERM_CODE" --subjects ECON-UA,FMTV-UT,FINC-UB
+      - name: Check what landed
+        run: |
+          psql "$DATABASE_URL" -c "
+            select c.subject, count(distinct s.id) sections, count(m.id) meetings,
+                   count(s.mode) with_mode
+            from sections s join courses c on c.id = s.course_id
+            left join meetings m on m.section_id = s.id
+            group by c.subject order by 1"
+          n=$(psql "$DATABASE_URL" -tAc "select count(*) from sections")
+          test "$n" -gt 0
+
+  # On schedule or by hand: refresh the real database.
+  refresh:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Skip until the database is connected
+        if: env.DATABASE_URL == ''
+        run: echo "::notice::Add a DATABASE_URL repository secret to enable the daily refresh."
+      - uses: actions/checkout@v4
+        if: env.DATABASE_URL != ''
+      - uses: actions/setup-python@v5
+        if: env.DATABASE_URL != ''
+        with:
+          python-version: "3.12"
+      - if: env.DATABASE_URL != ''
+        run: pip install -r scrapers/requirements.txt
+      - if: env.DATABASE_URL != ''
+        run: python3 scrapers/sections.py --term "$TERM_CODE"
