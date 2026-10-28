@@ -37,6 +37,17 @@ jobs:
             psql -v ON_ERROR_STOP=1 -q -f "$f"
           done
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scraper tests
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost/planner
+        run: |
+          pip install -r scrapers/requirements.txt
+          python3 -m pytest -q tests
+
       - name: Every pilot program has requirements
         run: |
           missing=$(psql -tAc "select count(*) from programs p where not exists (select 1 from requirement_groups g where g.program_id = p.id)")

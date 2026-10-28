@@ -16,6 +16,8 @@ Television BFA), and CAS (Economics and Computer Science BA).
 | `supabase/seed.sql` | Schools, terms, and the three pilot programs |
 | `data/requirements/` | One JSON file per program: its requirement tree, from the NYU Bulletins |
 | `scripts/build_requirements_sql.py` | Turns the JSON files into `supabase/seed_requirements.sql` |
+| `scrapers/sections.py` | Loads a term's sections from NYU Class Search |
+| `tests/` | Scraper tests (`python3 -m pytest tests`) |
 
 ## Database
 
@@ -43,6 +45,25 @@ python3 scripts/build_requirements_sql.py > supabase/seed_requirements.sql
 
 The pilot data was transcribed from the Bulletins and is marked
 `requirements_reviewed = false` until someone checks it against the program page.
+
+### Sections from Class Search
+
+`scrapers/sections.py` reads NYU Class Search's public JSON API
+(`bulletins.nyu.edu/class-search/api/?page=fose`). One search call returns every
+section in a term with its meeting times; a details call per section adds the
+instructional method and course description for the pilot subjects.
+
+```sh
+pip install -r scrapers/requirements.txt
+DATABASE_URL=postgres://... python3 scrapers/sections.py --term 1274
+```
+
+The `Sections` workflow runs this daily once the repository has a
+`DATABASE_URL` secret (Supabase: Project settings, Database, connection
+string). On pull requests it scrapes three subjects into a throwaway database.
+
+Class Search does not currently publish instructor names or seat counts for
+Spring 2027; the scraper stores instructors whenever they appear.
 
 ### Apply to Supabase
 
