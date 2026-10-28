@@ -30,12 +30,12 @@ jobs:
           python3 scripts/build_requirements_sql.py > /tmp/seed_requirements.sql
           diff -u supabase/seed_requirements.sql /tmp/seed_requirements.sql
 
-      - name: Apply migrations and seeds
+      - name: Set up the database, twice (re-runs must be safe)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost/planner
         run: |
-          for f in supabase/migrations/*.sql supabase/seed.sql supabase/seed_requirements.sql; do
-            echo "== $f"
-            psql -v ON_ERROR_STOP=1 -q -f "$f"
-          done
+          scripts/setup_database.sh
+          scripts/setup_database.sh
 
       - uses: actions/setup-python@v5
         with:

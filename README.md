@@ -12,12 +12,14 @@ Television BFA), and CAS (Economics and Computer Science BA).
 | Path | What it is |
 | --- | --- |
 | `web/` | Next.js app (App Router, TypeScript, Tailwind), deployed to Vercel |
+| `web/src/lib/planner.ts` | The planner engine: matches completed courses to requirements and finds next term's options |
 | `supabase/migrations/` | Postgres schema, applied to Supabase |
 | `supabase/seed.sql` | Schools, terms, and the three pilot programs |
 | `data/requirements/` | One JSON file per program: its requirement tree, from the NYU Bulletins |
 | `scripts/build_requirements_sql.py` | Turns the JSON files into `supabase/seed_requirements.sql` |
 | `scrapers/sections.py` | Loads a term's sections from NYU Class Search |
 | `tests/` | Scraper tests (`python3 -m pytest tests`) |
+| `scripts/setup_database.sh` | Applies new migrations and reloads seeds; safe to re-run |
 
 ## Database
 
@@ -65,29 +67,38 @@ string). On pull requests it scrapes three subjects into a throwaway database.
 Class Search does not currently publish instructor names or seat counts for
 Spring 2027; the scraper stores instructors whenever they appear.
 
-### Apply to Supabase
+### Set up a database
 
 ```sh
-supabase link --project-ref <your-project-ref>
-supabase db push
-psql "$DATABASE_URL" -f supabase/seed.sql
-psql "$DATABASE_URL" -f supabase/seed_requirements.sql
+DATABASE_URL=postgres://... scripts/setup_database.sh
 ```
 
-### Try it locally with plain Postgres
-
-```sh
-createdb planner
-for f in supabase/migrations/*.sql supabase/seed.sql supabase/seed_requirements.sql; do
-  psql -d planner -v ON_ERROR_STOP=1 -f "$f"
-done
-```
+Applied migrations are recorded in `schema_migrations`, so re-running only
+applies new ones. For Supabase, use the **Session pooler** connection string
+(Connect button in the dashboard). The `Set up database` workflow runs this
+against the `DATABASE_URL` repository secret whenever `supabase/` changes on
+main, or on demand.
 
 ## Web app
 
 ```sh
 cd web
-cp .env.example .env.local   # fill in your Supabase URL and anon key
+cp .env.example .env.local   # fill in DATABASE_URL
 npm install
 npm run dev
+npm test                     # planner engine tests
 ```
+
+The app reads Postgres directly from the server with `DATABASE_URL`; nothing
+in the browser touches the database. To deploy on Vercel, set the project's
+root directory to `web` and add `DATABASE_URL` as an environment variable.
+
+### How the planner decides
+
+- A course named outright in several requirements counts toward each
+  (FINC-UB 2 is both business core and finance concentration).
+- A course that only matches a pattern counts once, in the narrowest place it
+  fits: `CSCI-UA 4__` before a catch-all elective.
+- Next term's options for an elective pattern leave out courses that another
+  requirement names as required or as one of a fixed list.
+- Unknown credits are assumed to be 4, and the page says so.

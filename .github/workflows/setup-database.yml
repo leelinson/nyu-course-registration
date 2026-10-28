@@ -1,0 +1,23 @@
+name: Set up database
+
+# Keeps the real database in step with main: applies new migrations and
+# reloads seed data whenever they change, or on demand.
+on:
+  push:
+    branches: [main]
+    paths: [supabase/**, scripts/setup_database.sh]
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Skip until the database is connected
+        if: env.DATABASE_URL == ''
+        run: echo "::notice::Add a DATABASE_URL repository secret to set up the database."
+      - uses: actions/checkout@v4
+        if: env.DATABASE_URL != ''
+      - if: env.DATABASE_URL != ''
+        run: scripts/setup_database.sh
